@@ -71,6 +71,7 @@ class BaseTextCategorizationDataset:
         returns number of train samples
         (training set size)
         """
+
         return integer_floor(self._get_num_samples() * self.train_ratio)
 
     def _get_num_test_samples(self):
@@ -84,14 +85,14 @@ class BaseTextCategorizationDataset:
         """
         returns number of train batches
         """
-        return self._get_num_train_samples()/self.batch_size
+        return integer_floor(self._get_num_train_samples()/self.batch_size)
 
     def _get_num_test_batches(self):
         """
         returns number of test batches
         """
         
-        return self._get_num_test_samples()/self.batch_size
+        return integer_floor(self._get_num_test_samples()/self.batch_size)
 
     def get_train_batch(self):
         """
@@ -177,6 +178,7 @@ class LocalTextCategorizationDataset(BaseTextCategorizationDataset):
 
         y = self.to_indexes(self._dataset['tag_name'])
         y = to_categorical(y, num_classes=len(self._label_list))
+        
 
         self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(
             self._dataset['title'],
@@ -218,7 +220,6 @@ class LocalTextCategorizationDataset(BaseTextCategorizationDataset):
                 most_f = (df['tag_name'].value_counts() >= x)
                 most_f = most_f[most_f.values == True].index.to_list()
                 df = df[df['tag_name'].isin(most_f)]
-                
                 return df
 
             return filter_function
@@ -248,10 +249,10 @@ class LocalTextCategorizationDataset(BaseTextCategorizationDataset):
         i = self.train_batch_index
         
         # takes x_train between i * batch_size to (i + 1) * batch_size, and apply preprocess_text
-        next_x = self.preprocess_text(self.x_train[int(i*self._get_num_train_batches()):int((i+1)*self._get_num_train_batches())])
+        next_x = self.preprocess_text(self.x_train[i*self.batch_size:(i+1)*self.batch_size])
         
         # takes y_train between i * batch_size to (i + 1) * batch_size
-        next_y = self.y_train[int(i*self._get_num_train_batches()):int((i+1)*self._get_num_train_batches())]
+        next_y = self.y_train[i*self.batch_size:(i+1)*self.batch_size]
         # When we reach the max num batches, we start a new
         self.train_batch_index = (self.train_batch_index + 1) % self._get_num_train_batches()
     
@@ -265,12 +266,12 @@ class LocalTextCategorizationDataset(BaseTextCategorizationDataset):
         i = self.test_batch_index
         
         # takes x_train between i * batch_size to (i + 1) * batch_size, and apply preprocess_text
-        next_x = self.preprocess_text(self.x_test[int(i*self._get_num_test_batches()):int((i+1)*self._get_num_test_batches())])
+        next_x = self.preprocess_text(self.x_test[i*self.batch_size:(i+1)*self.batch_size])
         
         # takes y_train between i * batch_size to (i + 1) * batch_size
-        next_y = self.y_test[int(i*self._get_num_test_batches()):int((i+1)*self._get_num_test_batches())]
+        next_y = self.y_test[i*self.batch_size:(i+1)*self.batch_size]
         # When we reach the max num batches, we start a new
-        self.train_batch_index = (self.train_batch_index + 1) % self._get_num_train_batches()
+        self.test_batch_index = (self.test_batch_index + 1) % self._get_num_test_batches()
 
         
         return next_x, next_y

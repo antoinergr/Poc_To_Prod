@@ -88,7 +88,7 @@ class TestLocalTextCategorizationDataset(unittest.TestCase):
             'tag_position': [0, 0, 0, 0,1,0],
             'title': ['title_1', 'title_2','title_3', 'title_4','title_5', 'title_6']
         }))
-        base = utils.LocalTextCategorizationDataset("fake path",2,0.6,min_samples_per_label=2)
+        base = utils.LocalTextCategorizationDataset("fake path",1,0.6,min_samples_per_label=2)
 
         self.assertEqual(base._get_num_samples(),3)
 
@@ -96,7 +96,7 @@ class TestLocalTextCategorizationDataset(unittest.TestCase):
 
         pd.read_csv = MagicMock(return_value=pd.DataFrame({
             'post_id': ['id_1', 'id_2','id_3','id_4','id_5','id_6'],
-            'tag_name': ['tag_a', 'tag_b','tag_a','tag_a','tag_b','tag_c'],
+            'tag_name': ['tag_a', 'tag_b','tag_a','tag_a','tag_b','tag_b'],
             'tag_id': [1, 2, 3, 4,5,6],
             'tag_position': [0, 0, 0, 0,1,0],
             'title': ['title_1', 'title_2','title_3', 'title_4','title_5', 'title_6']
@@ -105,23 +105,22 @@ class TestLocalTextCategorizationDataset(unittest.TestCase):
 
         x , y = base.get_train_batch()
 
-        self.assertTupleEqual(x.shape,(0,)) and self.assertTupleEqual(y.shape,(0,3))
+        self.assertTupleEqual(x.shape,(2,)) and self.assertTupleEqual(y.shape,(2,2))
 
 
     def test_get_test_batch_returns_expected_shape(self):
         
         pd.read_csv = MagicMock(return_value=pd.DataFrame({
             'post_id': ['id_1', 'id_2','id_3','id_4','id_5','id_6'],
-            'tag_name': ['tag_a', 'tag_b','tag_a','tag_a','tag_c','tag_b'],
+            'tag_name': ['tag_a', 'tag_b','tag_a','tag_a','tag_b','tag_b'],
             'tag_id': [1, 2, 3, 4,5,6],
-            'tag_position': [0, 0, 0, 0,0,0],
+            'tag_position': [0, 0, 0, 0,1,0],
             'title': ['title_1', 'title_2','title_3', 'title_4','title_5', 'title_6']
         }))
         base = utils.LocalTextCategorizationDataset("fake path",2,0.6,min_samples_per_label=2)  
 
         x , y = base.get_test_batch()
-
-        self.assertTupleEqual(x.shape,(1,)) and self.assertTupleEqual(y.shape,(1,3))
+        self.assertTupleEqual(x.shape,(2,)) and self.assertTupleEqual(y.shape,(2,2))
 
     def test_get_train_batch_raises_assertion_error(self):
         pd.read_csv = MagicMock(return_value=pd.DataFrame({

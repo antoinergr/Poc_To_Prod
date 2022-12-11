@@ -38,7 +38,7 @@ def train(dataset_path, train_conf, model_path, add_timestamp):
     # TODO: CODE HERE
     # instantiate a LocalTextCategorizationDataset, use embed method from preprocessing module for preprocess_text param
     # use train_conf for other needed params
-    dataset = LocalTextCategorizationDataset(dataset_path,train_conf['batch_size'],0.6,
+    dataset = LocalTextCategorizationDataset(dataset_path,train_conf['batch_size'],0.8,
     min_samples_per_label=train_conf['min_samples_per_label'],preprocess_text=embed)
 
     logger.info(dataset)
@@ -47,6 +47,7 @@ def train(dataset_path, train_conf, model_path, add_timestamp):
     # instantiate a sequential keras model
     # add a dense layer with relu activation
     # add an output layer (multiclass classification problem)
+
     model = Sequential([
         Dense(train_conf['dense_dim'],activation = 'relu', input_shape= (dataset.get_train_batch()[0].shape[-1],)),
         Dense(dataset.get_num_labels(),activation = 'softmax')

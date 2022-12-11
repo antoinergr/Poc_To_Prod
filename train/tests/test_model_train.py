@@ -39,9 +39,9 @@ class TestTrain(unittest.TestCase):
         # TODO: CODE HERE
         # create a dictionary params for train conf
         params = {
-                'batch_size': 3,
+                'batch_size': 2,
                 'epochs': 1,
-                'dense_dim': 64,
+                'dense_dim': 32,
                 'min_samples_per_label': 5,
                 'verbose': 1
             }
@@ -49,7 +49,7 @@ class TestTrain(unittest.TestCase):
         # we create a temporary file to store artefacts
         with tempfile.TemporaryDirectory() as model_dir:
             # run a training
-            accuracy, _ = run.train('fake',params,'path',False)
+            accuracy, _ = run.train('fake',params,'saved_models',True)
 
         # TODO: CODE HERE
         # assert that accuracy is equal to 1.0
