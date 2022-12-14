@@ -29,10 +29,10 @@ class _SimpleSequence(Sequence):
         self.num_batches_method = num_batches_method
 
     def __len__(self):
-        return self.num_batches_method
+        return self.num_batches_method()
 
-    def __getitem__(self, idx):
-        return self.get_batch_method[idx]
+    def __getitem__(self, index):
+        return self.get_batch_method()
 
 
 class BaseTextCategorizationDataset:
@@ -134,13 +134,13 @@ class BaseTextCategorizationDataset:
         returns a train sequence of type _SimpleSequence
         """
         
-        return _SimpleSequence(self.get_train_batch(), self._get_num_train_batches())
+        return _SimpleSequence(self.get_train_batch, self._get_num_train_batches)
 
     def get_test_sequence(self):
         """
         returns a test sequence of type _SimpleSequence
         """
-        return _SimpleSequence(self.get_test_batch(),self._get_num_test_batches())
+        return _SimpleSequence(self.get_test_batch,self._get_num_test_batches)
 
     def __repr__(self):
         return self.__class__.__name__ + \
@@ -273,5 +273,4 @@ class LocalTextCategorizationDataset(BaseTextCategorizationDataset):
         # When we reach the max num batches, we start a new
         self.test_batch_index = (self.test_batch_index + 1) % self._get_num_test_batches()
 
-        
         return next_x, next_y
