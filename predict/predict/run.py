@@ -29,7 +29,7 @@ class TextPredictionModel:
         """
         # TODO: CODE HERE
         # load model
-        model = load_model(artefacts_path + '/model.h5')
+        model = load_model(artefacts_path + '/model.h5',)
 
         # TODO: CODE HERE
         # load params
@@ -43,7 +43,7 @@ class TextPredictionModel:
 
         return cls(model, params, labels_to_index)
 
-    def predict(self, text_list, top_k=1):
+    def predict(self, text_list, top_k=3):
         """
             predict top_k tags for a list of texts
             :param text_list: list of text (questions from stackoverflow)
@@ -55,10 +55,9 @@ class TextPredictionModel:
 
         # TODO: CODE HERE
         embedding = embed(text_list)
-
         # TODO: CODE HERE
         # predict tags indexes from embeddings
-        predict = model.model.predict(embedding)
+        predict = self.model.predict(embedding)
 
         # TODO: CODE HERE
         # from tags indexes compute top_k tags for each text
