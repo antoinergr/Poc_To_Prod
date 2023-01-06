@@ -49,7 +49,7 @@ class TestTrain(unittest.TestCase):
         # we create a temporary file to store artefacts
         with tempfile.TemporaryDirectory() as model_dir:
             # run a training
-            accuracy, _ = run.train('fake',params,'saved_models',True)
+            accuracy, _ = run.train('fake',params,model_dir,True)
 
         # TODO: CODE HERE
         # assert that accuracy is equal to 1.0
