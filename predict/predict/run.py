@@ -29,19 +29,21 @@ class TextPredictionModel:
         """
         # TODO: CODE HERE
         # load model
-        model = load_model(artefacts_path + 'saved_model.pb')
+        model = load_model(artefacts_path + '/model.h5',)
 
         # TODO: CODE HERE
         # load params
-        params = json.load(artefacts_path + 'params.json')
+        f = open(artefacts_path + '/params.json')
+        params = json.load(f)
 
         # TODO: CODE HERE
         # load labels_to_index
-        labels_to_index = json.load(artefacts_path + 'labels_index.json')
+        labels = open(artefacts_path + '/labels_index.json')
+        labels_to_index = json.load(labels)
 
         return cls(model, params, labels_to_index)
 
-    def predict(self, text_list, top_k=1):
+    def predict(self, text_list, top_k=2):
         """
             predict top_k tags for a list of texts
             :param text_list: list of text (questions from stackoverflow)
@@ -53,17 +55,18 @@ class TextPredictionModel:
 
         # TODO: CODE HERE
         embedding = embed(text_list)
-
         # TODO: CODE HERE
         # predict tags indexes from embeddings
-        predict = model.predict(embedding)
+        predict = self.model.predict(embedding)
 
         # TODO: CODE HERE
         # from tags indexes compute top_k tags for each text
-        indices = argsort(predict)[-top_k:]
-        list_indices = [predict[x] for x in indices]
-        predictions = [self.labels_index_inv[x] for x in list_indices]
-
+        indices = argsort(predict)
+        print(indices)
+        top_tags_indices = [index[-top_k:].tolist() for index in indices]
+        
+        predictions = [[self.labels_index_inv[y] for y in x] for x in top_tags_indices]
+        
         logger.info("Prediction done in {:2f}s".format(time.time() - tic))
 
         return predictions
@@ -81,7 +84,7 @@ if __name__ == "__main__":
 
     if args.text is None:
         while True:
-            txt = input("Type the text you would like to tag: ")
+            txt = input("How to read a csv using numpy")
             predictions = model.predict([txt])
             print(predictions)
     else:

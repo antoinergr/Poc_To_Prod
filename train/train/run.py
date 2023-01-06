@@ -50,23 +50,21 @@ def train(dataset_path, train_conf, model_path, add_timestamp):
 
     model = Sequential([
         Dense(train_conf['dense_dim'],activation = 'relu', input_shape= (dataset.get_train_batch()[0].shape[-1],)),
-        Dense(dataset.get_num_labels(),activation = 'softmax')
+        Dense(dataset.get_num_labels(),activation = 'sigmoid')
     ])
     
     # TODO: CODE HERE
     # model fit using data sequences
-    model.compile(optimizer='adam',loss = 'categorical_crossentropy',metrics= ['accuracy'])
+    model.compile(optimizer='adam',loss = 'binary_crossentropy',metrics= ['accuracy'])
     
     
     train_history = model.fit(
-            dataset.get_train_sequence().__getitem__(0),
-            dataset.get_train_sequence().__getitem__(1),
-            batch_size = train_conf['batch_size'],
+            dataset.get_train_sequence(),
             epochs = train_conf['epochs']
         )
 
     # scores
-    scores = model.evaluate(dataset.get_test_sequence().__getitem__(0),dataset.get_test_sequence().__getitem__(1), verbose=0)
+    scores = model.evaluate(dataset.get_test_sequence(), verbose=0)
 
     print("Test Accuracy: {:.2f}".format(scores[1] * 100))
 
@@ -76,7 +74,7 @@ def train(dataset_path, train_conf, model_path, add_timestamp):
 
     # TODO: CODE HERE
     # save model in artefacts folder, name model.h5
-    model.save(artefacts_path)
+    model.save(artefacts_path + "/model.h5", save_format= 'h5')
 
     # TODO: CODE HERE
     # save train_conf used in artefacts_path/params.json
