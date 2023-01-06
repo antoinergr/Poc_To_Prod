@@ -62,7 +62,7 @@ class TextPredictionModel:
         # TODO: CODE HERE
         # from tags indexes compute top_k tags for each text
         indices = argsort(predict)
-        print(indices)
+        
         top_tags_indices = [index[-top_k:].tolist() for index in indices]
         
         predictions = [[self.labels_index_inv[y] for y in x] for x in top_tags_indices]
