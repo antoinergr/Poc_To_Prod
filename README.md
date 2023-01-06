@@ -2,12 +2,12 @@
 
 # Table of Contents
 
-1. [Description](#description)
-2. [Maintainers](#maintainers)
-3. [Prerequistes](#prerequistes)
-4. [Installation](#Installation)
-5. [Run the micro-service application](#run-the-micro-service-application)
-6. [Use the application](#use-the-application)
+1. [Description](#1.-description)
+2. [Maintainers](#2.-maintainers)
+3. [Prerequistes](#3-prerequistes)
+4. [Installation](#4-Installation)
+5. [Run the micro-service application](#5-run-the-micro-service-application)
+6. [Use the application](#6-use-the-application)
     1. [Example](#example)
 
 ## 1. Description
