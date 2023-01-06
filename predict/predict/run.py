@@ -43,7 +43,7 @@ class TextPredictionModel:
 
         return cls(model, params, labels_to_index)
 
-    def predict(self, text_list, top_k=3):
+    def predict(self, text_list, top_k=2):
         """
             predict top_k tags for a list of texts
             :param text_list: list of text (questions from stackoverflow)
@@ -62,9 +62,11 @@ class TextPredictionModel:
         # TODO: CODE HERE
         # from tags indexes compute top_k tags for each text
         indices = argsort(predict)
-        top_tags_indices = indices[0][-top_k:]
-        predictions = [self.labels_index_inv[x] for x in top_tags_indices]
-
+        print(indices)
+        top_tags_indices = [index[-top_k:].tolist() for index in indices]
+        
+        predictions = [[self.labels_index_inv[y] for y in x] for x in top_tags_indices]
+        
         logger.info("Prediction done in {:2f}s".format(time.time() - tic))
 
         return predictions
